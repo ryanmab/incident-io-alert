@@ -41,7 +41,7 @@ alert source configuration, and set them as inputs in the GitHub Action.
 ### Example
 
 ```yaml
-- uses: ryanmab/incident-io-alert@v1
+- uses: ryanmab/incident-io-alert@v0.1
   with:
     alert_source_id: ${{ secrets.ALERT_SOURCE_ID }}
     alert_source_token: ${{ secrets.ALERT_SOURCE_TOKEN }}
