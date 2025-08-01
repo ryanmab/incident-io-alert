@@ -1,0 +1,37 @@
+name: "Incident.io Alert"
+description: "A community maintained GitHub Action for triggering Incident.io alerts from GitHub workflows."
+author: "Ryan Maber"
+branding:
+    icon: "alert-circle"
+    color: "orange"
+
+inputs:
+    alert_source_id:
+        required: true
+        description: "The alert source configuration ID to use when firing the event"
+    alert_source_token:
+        required: true
+        description: "The token used to authenticate the request with the alert source"
+    title:
+        required: true
+        description: "The title of the alert event"
+    description:
+        required: true
+        description: "The description of the alert event. Can be Markdown."
+    status:
+        required: false
+        default: "firing"
+        description: 'The status of the alert event. Can either be "firing" or "resolved"'
+    metadata:
+        required: false
+        description: "The additional metadata to include in the alert event. Must be a valid JSON string"
+
+outputs:
+    deduplication_key:
+        description: "The deduplication key for the alert event, used to prevent duplicate alerts"
+    status:
+        description: 'The status of the alert event. Will be either "success" or "failure"'
+
+runs:
+    using: "node20"
+    main: "dist/index.js"

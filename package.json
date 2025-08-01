@@ -1,0 +1,41 @@
+{
+  "name": "incident-io-alert",
+  "version": "0.0.0",
+  "private": false,
+  "description": "A community maintained GitHub Action for triggering Incident.io alerts from GitHub workflows.",
+  "main": "lib/runtime.js",
+  "scripts": {
+    "build:compile": "tsc",
+    "build:package": "ncc build --license licenses.txt",
+    "lint:style": "prettier --check **/*.ts",
+    "lint:static-analysis": "eslint src/**/*.ts",
+    "test:unit": "jest"
+  },
+  "keywords": [
+    "incident.io",
+    "alert",
+    "paging"
+  ],
+  "author": "Ryan Maber",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1",
+    "@actions/http-client": "^2.2.3",
+    "@types/node": "^22.15.18",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@vercel/ncc": "^0.38.3",
+    "eslint": "^9.26.0",
+    "eslint-plugin-github": "^6.0.0",
+    "eslint-plugin-jest": "^28.11.0",
+    "jest": "^29.7.0",
+    "js-yaml": "^4.1.0",
+    "prettier": "^3.5.3",
+    "ts-jest": "^29.3.3",
+    "typescript": "^5.8.3"
+  }
+}
