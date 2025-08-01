@@ -80,7 +80,7 @@ jobs:
             token: ${{ secrets.COVERAGE_TOKEN }}
             files: |
                 ./coverage/**/lcov.info
-            tag: analyse-service
+            tag: jest
         continue-on-error: true
 
       - uses: ./
