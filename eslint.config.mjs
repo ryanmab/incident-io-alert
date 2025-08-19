@@ -1,6 +1,5 @@
 import jest from "eslint-plugin-jest";
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,10 +39,7 @@ export default [
             "@typescript-eslint": typescriptEslint,
         },
         languageOptions: {
-            globals: {
-                ...globals.node,
-                ...jest.environments.globals.globals,
-            },
+            globals: jest.environments.globals.globals,
 
             parser: tsParser,
             ecmaVersion: 9,
