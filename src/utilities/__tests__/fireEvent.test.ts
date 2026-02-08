@@ -1,19 +1,21 @@
-import { HttpClient } from "@actions/http-client";
-
-import { fireEvent } from "utilities";
-
-jest.mock("@actions/http-client");
-jest.mock("@actions/github", () => ({
-    context: {
-        repo: {
-            owner: "mock-owner",
-            repo: "mock-repo",
-        },
-    },
-}));
+import { jest } from "@jest/globals";
 
 describe("Given the fire event helper", () => {
+    beforeEach(() => {
+        jest.resetModules();
+    });
+
     it("should handle a successful event being fired", async () => {
+        const { HttpClient } = await import("@actions/http-client");
+        jest.unstable_mockModule("@actions/github", () => ({
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+            },
+        }));
+
         jest.spyOn(HttpClient.prototype, "postJson").mockImplementationOnce(async () => {
             return Promise.resolve({
                 headers: {},
@@ -25,6 +27,8 @@ describe("Given the fire event helper", () => {
                 },
             });
         });
+
+        const { fireEvent } = await import("../fireEvent.js");
 
         const { deduplicationKey, status, message } = await fireEvent(
             {
@@ -54,6 +58,16 @@ describe("Given the fire event helper", () => {
     });
 
     it("should handle a 404 error for invalid id", async () => {
+        const { HttpClient } = await import("@actions/http-client");
+        jest.unstable_mockModule("@actions/github", () => ({
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+            },
+        }));
+
         jest.spyOn(HttpClient.prototype, "postJson").mockImplementationOnce(async () => {
             return Promise.resolve({
                 headers: {},
@@ -61,6 +75,8 @@ describe("Given the fire event helper", () => {
                 result: {},
             });
         });
+
+        const { fireEvent } = await import("../fireEvent.js");
 
         await expect(
             async () =>
@@ -80,6 +96,16 @@ describe("Given the fire event helper", () => {
     });
 
     it("should handle a 403 error for invalid token", async () => {
+        const { HttpClient } = await import("@actions/http-client");
+        jest.unstable_mockModule("@actions/github", () => ({
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+            },
+        }));
+
         jest.spyOn(HttpClient.prototype, "postJson").mockImplementationOnce(async () => {
             return Promise.resolve({
                 headers: {},
@@ -88,6 +114,7 @@ describe("Given the fire event helper", () => {
             });
         });
 
+        const { fireEvent } = await import("../fireEvent.js");
         await expect(
             async () =>
                 await fireEvent(

@@ -1,5 +1,5 @@
 import { getInput } from "@actions/core";
-import { AlertSourceError } from "../errors/AlertSourceError";
+import { AlertSourceError } from "../errors/AlertSourceError.js";
 
 export type AlertSource = {
     configurationId: string;

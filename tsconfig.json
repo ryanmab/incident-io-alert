@@ -7,15 +7,22 @@
         "baseUrl": ".",
         "rootDir": "./src",
         "strict": true,
+        "isolatedModules": true,
         "noImplicitAny": true,
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "paths": {
-            "errors": [
-                "src/errors"
+            "@errors": [
+                "./src/errors/index.ts"
             ],
-            "utilities": [
-                "src/utilities"
+            "@utilities": [
+                "./src/utilities/index.ts"
+            ],
+            "@errors/*": [
+                "./src/errors/*"
+            ],
+            "@utilities/*": [
+                "./src/utilities/*"
             ]
         }
     },

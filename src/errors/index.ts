@@ -1,2 +1,2 @@
-export { EventDataError } from "./EventDataError";
-export { EventResponseError } from "./EventFailureError";
+export { EventDataError } from "./EventDataError.js";
+export { EventResponseError } from "./EventFailureError.js";

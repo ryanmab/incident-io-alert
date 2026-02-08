@@ -1,14 +1,19 @@
+import { jest } from "@jest/globals";
 const getInput = jest.fn();
 
-import { getAlertSource } from "utilities";
-
-jest.mock("@actions/core", () => ({
-    ...jest.requireActual("@actions/core"),
-    getInput,
-}));
-
 describe("Given the alert source helper", () => {
-    it("should return the configuration ID and token from the provided inputs", () => {
+    beforeEach(() => {
+        jest.resetModules();
+    });
+
+    it("should return the configuration ID and token from the provided inputs", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getAlertSource } = await import("../getAlertSource.js");
         getInput.mockImplementation((name) => {
             switch (name) {
                 case "alert_source_id":

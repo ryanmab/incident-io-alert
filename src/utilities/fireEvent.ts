@@ -1,9 +1,9 @@
 import { HttpClient } from "@actions/http-client";
 import { debug } from "@actions/core";
 import * as github from "@actions/github";
-import { getAlertSource, getEventData, getDeduplicationKey } from "utilities";
-import { EventResponseError } from "errors";
-import { INCIDENT_IO_HTTP_URL, USER_AGENT } from "../constants";
+import { getAlertSource, getEventData, getDeduplicationKey } from "@utilities";
+import { EventResponseError } from "@errors";
+import { INCIDENT_IO_HTTP_URL, USER_AGENT } from "../constants.js";
 
 /**
  * @see https://api-docs.incident.io/tag/Alert-Events-V2#operation/Alert%20Events%20V2_CreateHTTP!path=status&t=request

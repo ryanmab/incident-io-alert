@@ -1,6 +1,6 @@
 import { getInput } from "@actions/core";
-import { Event, EventStatus } from "utilities";
-import { EventDataError } from "errors";
+import { Event, EventStatus } from "@utilities";
+import { EventDataError } from "@errors";
 
 /**
  * Get the event data from the action inputs.

@@ -1,14 +1,18 @@
+import { jest } from "@jest/globals";
+import { EventStatus } from "@utilities";
+
 const getInput = jest.fn();
 
-import { EventStatus, getEventData } from "utilities";
-
-jest.mock("@actions/core", () => ({
-    ...jest.requireActual("@actions/core"),
-    getInput,
-}));
-
 describe("Given the event data helper", () => {
-    it("should return all of the expected event data when event is firing", () => {
+    it("should return all of the expected event data when event is firing", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getEventData } = await import("../getEventData.js");
+
         getInput.mockImplementation((name) => {
             switch (name) {
                 case "title":
@@ -37,7 +41,15 @@ describe("Given the event data helper", () => {
         expect(metadata).toEqual({ key: "value" });
     });
 
-    it("should return all of the expected event data when event is resolved", () => {
+    it("should return all of the expected event data when event is resolved", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getEventData } = await import("../getEventData.js");
+
         getInput.mockImplementation((name) => {
             switch (name) {
                 case "title":
@@ -66,7 +78,15 @@ describe("Given the event data helper", () => {
         expect(metadata).toEqual({ key: "value" });
     });
 
-    it("should handle an invalid status", () => {
+    it("should handle an invalid status", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getEventData } = await import("../getEventData.js");
+
         getInput.mockImplementation((name) => {
             switch (name) {
                 case "title":

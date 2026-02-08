@@ -1,5 +1,5 @@
 import { debug, info, setFailed, setOutput } from "@actions/core";
-import { getAlertSource, fireEvent, getEventData } from "utilities";
+import { getAlertSource, fireEvent, getEventData } from "@utilities";
 
 export const run = async () => {
     try {
