@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
+        "target": "ES2022",
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
         "outDir": "./lib",
         "baseUrl": ".",
         "rootDir": "./src",
@@ -10,8 +11,12 @@
         "esModuleInterop": true,
         "resolveJsonModule": true,
         "paths": {
-            "errors": ["src/errors"],
-            "utilities": ["src/utilities"],
+            "errors": [
+                "src/errors"
+            ],
+            "utilities": [
+                "src/utilities"
+            ]
         }
     },
     "exclude": [
