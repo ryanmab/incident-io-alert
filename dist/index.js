@@ -2,28 +2,19 @@
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 5915:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const core_1 = __nccwpck_require__(7484);
 const utilities_1 = __nccwpck_require__(7552);
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
+const run = async () => {
     try {
         const alertSource = (0, utilities_1.getAlertSource)();
         const eventData = (0, utilities_1.getEventData)();
-        const { deduplicationKey, message, status } = yield (0, utilities_1.fireEvent)(alertSource, eventData);
+        const { deduplicationKey, message, status } = await (0, utilities_1.fireEvent)(alertSource, eventData);
         (0, core_1.debug)(`Deduplication key: ${deduplicationKey}`);
         (0, core_1.debug)(`Message: ${message}`);
         switch (eventData.status) {
@@ -45,7 +36,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         if (error instanceof Error)
             (0, core_1.setFailed)(error.message);
     }
-});
+};
 exports.run = run;
 
 
@@ -31702,26 +31693,6 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fireEvent = exports.EventStatus = void 0;
 const http_client_1 = __nccwpck_require__(4844);
@@ -31744,20 +31715,26 @@ exports.EventStatus = ["firing", "resolved"];
  * @throws EventDataError
  * @throws EventResponseError
  */
-const fireEvent = (alertSource, eventData) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+const fireEvent = async (alertSource, eventData) => {
     const { repo: { owner, repo: repository }, runId, runAttempt, } = github.context;
     const client = new http_client_1.HttpClient(constants_1.USER_AGENT);
     const deduplicationKey = (0, utilities_1.getDeduplicationKey)(alertSource, eventData);
     let response;
     try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const _c = github.context, { apiUrl, graphqlUrl, serverUrl } = _c, context = __rest(_c, ["apiUrl", "graphqlUrl", "serverUrl"]);
-        response = yield client.postJson(`${constants_1.INCIDENT_IO_HTTP_URL}${alertSource.configurationId}`, Object.assign(Object.assign({}, eventData), { source_url: `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`, metadata: Object.assign(Object.assign({}, eventData.metadata), { 
+        const { apiUrl, graphqlUrl, serverUrl, ...context } = github.context;
+        response = await client.postJson(`${constants_1.INCIDENT_IO_HTTP_URL}${alertSource.configurationId}`, {
+            ...eventData,
+            source_url: `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`,
+            metadata: {
+                ...eventData.metadata,
                 /**
                  * Add some additional metadata about the workflow run.
                  */
-                github_context: context }), deduplication_key: deduplicationKey }), {
+                github_context: context,
+            },
+            deduplication_key: deduplicationKey,
+        }, {
             authorization: `Bearer ${alertSource.token}`,
         });
     }
@@ -31773,20 +31750,20 @@ const fireEvent = (alertSource, eventData) => __awaiter(void 0, void 0, void 0, 
         (0, core_1.debug)(`Response body: ${JSON.stringify(response.result)}`);
         throw errors_1.EventResponseError.invalidStatusCode(response.statusCode);
     }
-    if ((result === null || result === void 0 ? void 0 : result.status) !== "accepted") {
+    if (result?.status !== "accepted") {
         (0, core_1.debug)(`Response body: ${JSON.stringify(response.result)}`);
-        throw errors_1.EventResponseError.invalidResponseStatus((_a = response.result) === null || _a === void 0 ? void 0 : _a.status);
+        throw errors_1.EventResponseError.invalidResponseStatus(response.result?.status);
     }
-    if (!(result === null || result === void 0 ? void 0 : result.deduplication_key)) {
+    if (!result?.deduplication_key) {
         (0, core_1.debug)(`Response body: ${JSON.stringify(response.result)}`);
         throw errors_1.EventResponseError.missingDeduplicationKey();
     }
     return {
         deduplicationKey: result.deduplication_key,
-        message: (_b = response.result) === null || _b === void 0 ? void 0 : _b.message,
+        message: response.result?.message,
         status: result.status,
     };
-});
+};
 exports.fireEvent = fireEvent;
 
 
@@ -31918,7 +31895,6 @@ const errors_1 = __nccwpck_require__(5179);
  * @throws EventDataError
  */
 const getEventData = () => {
-    var _a;
     let title;
     let description;
     try {
@@ -31931,7 +31907,8 @@ const getEventData = () => {
         }
         throw new errors_1.EventDataError("An unknown error occurred while reading the event data inputs.");
     }
-    const status = (_a = (0, core_1.getInput)("status", { trimWhitespace: true, required: false })) !== null && _a !== void 0 ? _a : "firing";
+    const status = (0, core_1.getInput)("status", { trimWhitespace: true, required: false }) ??
+        "firing";
     if (!utilities_1.EventStatus.includes(status)) {
         /**
          * Status wasn't valid, so we should throw an error.
