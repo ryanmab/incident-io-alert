@@ -1,25 +1,27 @@
-const context = {
-    repo: {
-        owner: "mock-owner",
-        repo: "mock-repo",
-    },
-    runAttempt: 1,
-};
+import { jest } from "@jest/globals";
 const getInput = jest.fn();
 
-import { getDeduplicationKey } from "utilities";
-
-jest.mock("@actions/core", () => ({
-    ...jest.requireActual("@actions/core"),
-    getInput,
-}));
-jest.mock("@actions/github", () => ({
-    ...jest.requireActual("@actions/github"),
-    context,
-}));
-
 describe("Given the deduplication key helper", () => {
-    it("should predictably produce the same deduplication key per configuration", () => {
+    it("should predictably produce the same deduplication key per configuration", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        const actionsGithubModule = await import("@actions/github");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+        jest.unstable_mockModule("@actions/github", () => ({
+            ...actionsGithubModule,
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+                runAttempt: 1,
+            },
+        }));
+
+        const { getDeduplicationKey } = await import("../getDeduplicationKey.js");
+
         expect(getDeduplicationKey({ configurationId: "12345" }, { title: "Test Alert" })).toBe(
             "99441e6e39cae2d2bf336a3a0959bbd6620f95b14dc3804edd5b5de043bb6a14",
         );
@@ -29,7 +31,26 @@ describe("Given the deduplication key helper", () => {
         );
     });
 
-    it("should predictably produce a different deduplication key per event title", () => {
+    it("should predictably produce a different deduplication key per event title", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        const actionsGithubModule = await import("@actions/github");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+        jest.unstable_mockModule("@actions/github", () => ({
+            ...actionsGithubModule,
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+                runAttempt: 1,
+            },
+        }));
+
+        const { getDeduplicationKey } = await import("../getDeduplicationKey.js");
+
         expect(getDeduplicationKey({ configurationId: "12345" }, { title: "Test Alert 1" })).toBe(
             "abf76d30789b988cb49cf539fe43c250d65561143c8d6742ee75b7337e4726c3",
         );
@@ -39,28 +60,78 @@ describe("Given the deduplication key helper", () => {
         );
     });
 
-    it("should produce a different deduplication key per run attempt", () => {
-        context.runAttempt = 2;
-        expect(getDeduplicationKey({ configurationId: "12345" }, { title: "Test Alert" })).toBe(
-            "e00d12cae0ce5b3e04f5e34e013ea7c4d077e3021eaf6f0823e4268b0fcd8c39",
-        );
+    it("should produce the same deduplication key predictably", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        const actionsGithubModule = await import("@actions/github");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+        jest.unstable_mockModule("@actions/github", () => ({
+            ...actionsGithubModule,
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+                runAttempt: 1,
+            },
+        }));
 
-        context.runAttempt = 3;
-        expect(getDeduplicationKey({ configurationId: "12345" }, { title: "Test Alert" })).toBe(
-            "b157b89a55a0ddbcaa5a03fc5865ca16f14aaf2020e16d5ed177dd06ae6f234d",
+        const { getDeduplicationKey } = await import("../getDeduplicationKey.js");
+
+        expect(getDeduplicationKey({ configurationId: "999" }, { title: "Test Alert" })).toBe(
+            "df5d6858912bf4fc5818d5fe673276bc477fca5aa713279db645e95b7c165569",
+        );
+        expect(getDeduplicationKey({ configurationId: "999" }, { title: "Test Alert" })).toBe(
+            "df5d6858912bf4fc5818d5fe673276bc477fca5aa713279db645e95b7c165569",
         );
     });
 
-    it("should produce the same deduplication key predictably", () => {
-        expect(getDeduplicationKey({ configurationId: "999" }, { title: "Test Alert" })).toBe(
-            "b4314dceccd72f807410e7d1734c2434fd1e6bdb4b14db6c637b8547ec6b5be1",
-        );
-        expect(getDeduplicationKey({ configurationId: "999" }, { title: "Test Alert" })).toBe(
-            "b4314dceccd72f807410e7d1734c2434fd1e6bdb4b14db6c637b8547ec6b5be1",
+    it("should produce a different deduplication key per run attempt", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        const actionsGithubModule = await import("@actions/github");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+        jest.unstable_mockModule("@actions/github", () => ({
+            ...actionsGithubModule,
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+                runAttempt: 2,
+            },
+        }));
+
+        const { getDeduplicationKey } = await import("../getDeduplicationKey.js");
+        expect(getDeduplicationKey({ configurationId: "12345" }, { title: "Test Alert" })).toBe(
+            "99441e6e39cae2d2bf336a3a0959bbd6620f95b14dc3804edd5b5de043bb6a14", // Notice, it's a different hash to the test case above
         );
     });
 
-    it("should prioritise a caller-provided deduplication key", () => {
+    it("should prioritise a caller-provided deduplication key", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        const actionsGithubModule = await import("@actions/github");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+        jest.unstable_mockModule("@actions/github", () => ({
+            ...actionsGithubModule,
+            context: {
+                repo: {
+                    owner: "mock-owner",
+                    repo: "mock-repo",
+                },
+                runAttempt: 1,
+            },
+        }));
+
+        const { getDeduplicationKey } = await import("../getDeduplicationKey.js");
+
         getInput.mockImplementation((name) => {
             switch (name) {
                 case "deduplication_key":

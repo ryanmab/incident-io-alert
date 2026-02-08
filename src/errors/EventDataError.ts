@@ -1,4 +1,4 @@
-import { EventStatus } from "utilities";
+import { EventStatus } from "@utilities";
 
 export class EventDataError extends Error {
     static invalidMetadata(error: Error) {

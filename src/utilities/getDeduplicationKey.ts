@@ -1,8 +1,8 @@
 import { createHash } from "crypto";
 import * as github from "@actions/github";
-import { getAlertSource, getEventData } from "utilities";
+import { getAlertSource, getEventData } from "@utilities";
 import { getInput } from "@actions/core";
-import { EventDataError } from "errors";
+import { EventDataError } from "@errors";
 
 /**
  * Create a deduplication key for the alert.
