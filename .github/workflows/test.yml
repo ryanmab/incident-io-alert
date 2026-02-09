@@ -74,7 +74,7 @@ jobs:
       - name: Run tests
         run: npm run test:unit -- --ci --coverage --coverageDirectory=./coverage/jest
 
-      - uses: coverage-robot/action@v1.0.10
+      - uses: coverage-robot/action@v1.0.11
         if: always()
         with:
             token: ${{ secrets.COVERAGE_TOKEN }}
