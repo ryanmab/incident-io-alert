@@ -27,7 +27,7 @@
     "license": "MIT",
     "dependencies": {
         "@actions/core": "^3.0.1",
-        "@actions/github": "^9.0.0",
+        "@actions/github": "^9.1.1",
         "@actions/http-client": "^4.0.0",
         "@types/node": "^25.5.2",
         "crypto": "^1.0.1"
