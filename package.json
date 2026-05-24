@@ -29,12 +29,12 @@
         "@actions/core": "^3.0.1",
         "@actions/github": "^9.0.0",
         "@actions/http-client": "^4.0.0",
-        "@types/node": "^25.5.2",
         "crypto": "^1.0.1"
     },
     "devDependencies": {
         "@jest/globals": "^30.4.1",
         "@types/jest": "^30.0.0",
+        "@types/node": "^25.9.1",
         "@typescript-eslint/eslint-plugin": "^8.59.3",
         "@vercel/ncc": "^0.38.4",
         "eslint": "^9.39.2",
@@ -45,6 +45,6 @@
         "prettier": "^3.8.3",
         "ts-jest": "^29.4.9",
         "ts-jest-resolver": "^2.0.1",
-        "typescript": "^5.9.3"
+        "typescript": "^6.0.3"
     }
 }
