@@ -32,12 +32,13 @@
         "crypto": "^1.0.1"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@jest/globals": "^30.4.1",
         "@types/jest": "^30.0.0",
         "@types/node": "^26.1.0",
         "@typescript-eslint/eslint-plugin": "^8.68.0",
         "@vercel/ncc": "^0.38.4",
-        "eslint": "^9.39.2",
+        "eslint": "^10.11.0",
         "eslint-plugin-github": "^6.1.2",
         "eslint-plugin-jest": "^29.15.4",
         "jest": "^30.4.2",
