@@ -17,6 +17,7 @@ export type Event = {
     title: string;
     status: (typeof EventStatus)[number];
     description?: string;
+    source_url?: string;
     metadata?: { [key: string]: unknown };
 };
 
@@ -40,12 +41,6 @@ export const fireEvent = async (
     alertSource: ReturnType<typeof getAlertSource>,
     eventData: ReturnType<typeof getEventData>,
 ): Promise<EventResponse> => {
-    const {
-        repo: { owner, repo: repository },
-        runId,
-        runAttempt,
-    } = github.context;
-
     const client = new HttpClient(USER_AGENT);
 
     const deduplicationKey = getDeduplicationKey(alertSource, eventData);
@@ -63,7 +58,6 @@ export const fireEvent = async (
             `${INCIDENT_IO_HTTP_URL}${alertSource.configurationId}`,
             {
                 ...eventData,
-                source_url: `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`,
                 metadata: {
                     ...eventData.metadata,
 

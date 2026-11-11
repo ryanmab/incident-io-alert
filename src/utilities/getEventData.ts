@@ -1,6 +1,7 @@
 import { getInput } from "@actions/core";
 import { Event, EventStatus } from "@utilities";
 import { EventDataError } from "@errors";
+import * as github from "@actions/github";
 
 /**
  * Get the event data from the action inputs.
@@ -35,11 +36,21 @@ export const getEventData = (): Event => {
 
     try {
         const metadata = getInput("metadata", { trimWhitespace: true, required: false });
+        const sourceUrl = getInput("source_url", { trimWhitespace: true, required: false });
+
+        const {
+            repo: { owner, repo: repository },
+            runId,
+            runAttempt,
+            serverUrl
+        } = github.context;
+
 
         return {
             title,
             status,
             description,
+            source_url: sourceUrl || `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}` ,
             metadata: metadata ? JSON.parse(metadata) : undefined,
         };
     } catch (error) {
