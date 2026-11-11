@@ -36028,7 +36028,8 @@ const fireEvent = async (alertSource, eventData) => {
         const { apiUrl, graphqlUrl, serverUrl, ...context } = github_context;
         response = await client.postJson(`${INCIDENT_IO_HTTP_URL}${alertSource.configurationId}`, {
             ...eventData,
-            source_url: `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`,
+            source_url: eventData.source_url ??
+                `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`,
             metadata: {
                 ...eventData.metadata,
                 /**
@@ -36132,10 +36133,12 @@ const getEventData = () => {
     }
     try {
         const metadata = getInput("metadata", { trimWhitespace: true, required: false });
+        const sourceUrl = getInput("source_url", { trimWhitespace: true, required: false });
         return {
             title,
             status,
             description,
+            source_url: sourceUrl || undefined,
             metadata: metadata ? JSON.parse(metadata) : undefined,
         };
     }

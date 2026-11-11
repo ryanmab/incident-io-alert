@@ -22,6 +22,9 @@ inputs:
         required: false
         default: "firing"
         description: 'The status of the alert event. Can either be "firing" or "resolved"'
+    source_url:
+        required: false
+        description: "A link to the alert in the originating system. Defaults to the URL of the workflow run"
     metadata:
         required: false
         description: "The additional metadata to include in the alert event. Must be a valid JSON string"

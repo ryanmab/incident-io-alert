@@ -35,11 +35,13 @@ export const getEventData = (): Event => {
 
     try {
         const metadata = getInput("metadata", { trimWhitespace: true, required: false });
+        const sourceUrl = getInput("source_url", { trimWhitespace: true, required: false });
 
         return {
             title,
             status,
             description,
+            source_url: sourceUrl || undefined,
             metadata: metadata ? JSON.parse(metadata) : undefined,
         };
     } catch (error) {
