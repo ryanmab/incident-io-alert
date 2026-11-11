@@ -3,6 +3,18 @@ import { EventStatus } from "@utilities";
 
 const getInput = jest.fn();
 
+jest.unstable_mockModule("@actions/github", () => ({
+    context: {
+        repo: {
+            owner: "mock-owner",
+            repo: "mock-repo",
+        },
+        serverUrl: "https://github.com",
+        runId: 1,
+        runAttempt: 2,
+    },
+}));
+
 describe("Given the event data helper", () => {
     it("should return all of the expected event data when event is firing", async () => {
         const actionsCoreModule = await import("@actions/core");
@@ -145,7 +157,7 @@ describe("Given the event data helper", () => {
         expect(source_url).toBe("https://example.com/alert");
     });
 
-    it("should leave the source URL undefined when none is provided", async () => {
+    it("should default the source URL to the workflow URL when none is provided", async () => {
         const actionsCoreModule = await import("@actions/core");
         jest.unstable_mockModule("@actions/core", () => ({
             ...actionsCoreModule,
@@ -171,6 +183,6 @@ describe("Given the event data helper", () => {
             }
         });
 
-        expect(getEventData().source_url).toBeUndefined();
+        expect(getEventData().source_url).toEqual("https://github.com/mock-owner/mock-repo/actions/runs/1/attempts/2");
     });
 });
