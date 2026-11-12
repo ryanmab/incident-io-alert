@@ -37,6 +37,7 @@ alert source configuration, and set them as inputs in the GitHub Action.
 - `status` - The status of the alert (**Optional**, **Options:** `firing` or `resolved`, **Default:** `firing`).
 - `deduplication_key` - A deduplication key to prevent duplicate alerts (**Optional**, **Default:** a unique hash based on the workflow context).
 - `source_url` - A link to the alert in the originating system, which incident.io uses as the destination for the alert's title (**Optional**, **Default:** the URL of the workflow run).
+- `link_to_workflow_run` - Set to `false` to leave the source URL out when `source_url` isn't given, so incident.io links the alert to its own alert page rather than the workflow run (**Optional**, **Default:** `true`).
 - `metadata` - Additional metadata to include with the alert in JSON format (**Optional**).
 
 ### Example

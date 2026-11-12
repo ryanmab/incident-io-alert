@@ -25,6 +25,10 @@ inputs:
     source_url:
         required: false
         description: "A link to the alert in the originating system. Defaults to the URL of the workflow run"
+    link_to_workflow_run:
+        required: false
+        default: "true"
+        description: 'Set to "false" to leave the source URL out when "source_url" is not given, so incident.io links to the alert itself rather than the workflow run'
     metadata:
         required: false
         description: "The additional metadata to include in the alert event. Must be a valid JSON string"

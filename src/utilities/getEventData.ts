@@ -37,20 +37,27 @@ export const getEventData = (): Event => {
     try {
         const metadata = getInput("metadata", { trimWhitespace: true, required: false });
         const sourceUrl = getInput("source_url", { trimWhitespace: true, required: false });
+        const linkToWorkflowRun = getInput("link_to_workflow_run", { trimWhitespace: true, required: false });
 
         const {
             repo: { owner, repo: repository },
             runId,
             runAttempt,
-            serverUrl
+            serverUrl,
         } = github.context;
-
 
         return {
             title,
             status,
             description,
-            source_url: sourceUrl || `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}` ,
+            /**
+             * Omitting the source URL lets incident.io link the alert to its own alert page instead.
+             */
+            source_url:
+                sourceUrl ||
+                (linkToWorkflowRun === "false"
+                    ? undefined
+                    : `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`),
             metadata: metadata ? JSON.parse(metadata) : undefined,
         };
     } catch (error) {

@@ -28840,9 +28840,6 @@ __webpack_unused_export__ = defaultContentType
 /******/ }
 /******/ 
 /************************************************************************/
-/******/ /* webpack/runtime/asset-relocator-loader */
-/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = decodeURIComponent(new URL('.', import.meta.url).pathname).slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
-/******/ 
 /******/ /* webpack/runtime/create fake namespace object */
 /******/ (() => {
 /******/ 	var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
@@ -28900,6 +28897,10 @@ __webpack_unused_export__ = defaultContentType
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/ })();
+/******/ 
+/******/ /* webpack/runtime/compat */
+/******/ 
+/******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
@@ -36131,12 +36132,19 @@ const getEventData = () => {
     try {
         const metadata = getInput("metadata", { trimWhitespace: true, required: false });
         const sourceUrl = getInput("source_url", { trimWhitespace: true, required: false });
-        const { repo: { owner, repo: repository }, runId, runAttempt, serverUrl } = github_context;
+        const linkToWorkflowRun = getInput("link_to_workflow_run", { trimWhitespace: true, required: false });
+        const { repo: { owner, repo: repository }, runId, runAttempt, serverUrl, } = github_context;
         return {
             title,
             status,
             description,
-            source_url: sourceUrl || `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`,
+            /**
+             * Omitting the source URL lets incident.io link the alert to its own alert page instead.
+             */
+            source_url: sourceUrl ||
+                (linkToWorkflowRun === "false"
+                    ? undefined
+                    : `${serverUrl}/${owner}/${repository}/actions/runs/${runId}/attempts/${runAttempt}`),
             metadata: metadata ? JSON.parse(metadata) : undefined,
         };
     }

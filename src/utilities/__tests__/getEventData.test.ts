@@ -37,6 +37,8 @@ describe("Given the event data helper", () => {
                     return JSON.stringify({ key: "value" });
                 case "source_url":
                     return "";
+                case "link_to_workflow_run":
+                    return "";
                 default:
                     throw new Error("Unexpected input");
             }
@@ -75,6 +77,8 @@ describe("Given the event data helper", () => {
                 case "metadata":
                     return JSON.stringify({ key: "value" });
                 case "source_url":
+                    return "";
+                case "link_to_workflow_run":
                     return "";
                 default:
                     throw new Error("Unexpected input");
@@ -115,6 +119,8 @@ describe("Given the event data helper", () => {
                     return JSON.stringify({ key: "value" });
                 case "source_url":
                     return "";
+                case "link_to_workflow_run":
+                    return "";
                 default:
                     throw new Error("Unexpected input");
             }
@@ -146,6 +152,8 @@ describe("Given the event data helper", () => {
                     return "";
                 case "source_url":
                     return "https://example.com/alert";
+                case "link_to_workflow_run":
+                    return "";
                 default:
                     throw new Error("Unexpected input");
             }
@@ -178,11 +186,75 @@ describe("Given the event data helper", () => {
                     return "";
                 case "source_url":
                     return "";
+                case "link_to_workflow_run":
+                    return "";
                 default:
                     throw new Error("Unexpected input");
             }
         });
 
         expect(getEventData().source_url).toEqual("https://github.com/mock-owner/mock-repo/actions/runs/1/attempts/2");
+    });
+
+    it("should leave the source URL out when linking to the workflow run is turned off", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getEventData } = await import("../getEventData.js");
+
+        getInput.mockImplementation((name) => {
+            switch (name) {
+                case "title":
+                    return "Mock title";
+                case "status":
+                    return "firing" satisfies (typeof EventStatus)[number];
+                case "description":
+                    return "Mock description";
+                case "metadata":
+                    return "";
+                case "source_url":
+                    return "";
+                case "link_to_workflow_run":
+                    return "false";
+                default:
+                    throw new Error("Unexpected input");
+            }
+        });
+
+        expect(getEventData().source_url).toBeUndefined();
+    });
+
+    it("should still use the given source URL when linking to the workflow run is turned off", async () => {
+        const actionsCoreModule = await import("@actions/core");
+        jest.unstable_mockModule("@actions/core", () => ({
+            ...actionsCoreModule,
+            getInput,
+        }));
+
+        const { getEventData } = await import("../getEventData.js");
+
+        getInput.mockImplementation((name) => {
+            switch (name) {
+                case "title":
+                    return "Mock title";
+                case "status":
+                    return "firing" satisfies (typeof EventStatus)[number];
+                case "description":
+                    return "Mock description";
+                case "metadata":
+                    return "";
+                case "source_url":
+                    return "https://example.com/alert";
+                case "link_to_workflow_run":
+                    return "false";
+                default:
+                    throw new Error("Unexpected input");
+            }
+        });
+
+        expect(getEventData().source_url).toBe("https://example.com/alert");
     });
 });
